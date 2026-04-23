@@ -2,10 +2,10 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .models import Coworking, Desk, Booking
-from .serializers import (
+from api.models import Coworking, Desk, Booking
+from api.serilaizers import (
     RegisterSerializer, CoworkingSerializer, 
     DeskSerializer, BookingSerializer
 )
@@ -36,12 +36,14 @@ class LoginApiView(APIView):
               user = authenticate(username=email, password=password)
               
               if user:
-                     refresh = RefreshToken.for_user(user)
+                     token, created = Token.objects.create(user=user)
                      return Response({
-                            'message': 'Успешно авторизовались',
-                            'data': {'token': str(refresh.access_token)}
-                     })
-              return Response({'message': 'Неверные учетные данные'}, status=401)
+                          'message': 'Успешная авторизаци',
+                          'data': {
+                                 'token': token.key
+                          }
+                     }, status=status.HTTP_200_OK)
+              return Response({'message': 'Неверные учетные данные'}, status=status.HTTP_401_UNAUTHORIZED)
        
        
        
