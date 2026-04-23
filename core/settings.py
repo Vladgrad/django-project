@@ -56,7 +56,7 @@ ROOT_URLCONF = 'core.urls'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'api.BearerToken.BasicAuthentication',
+        'api.authentication.BearerToken',
     ]
 }
 
